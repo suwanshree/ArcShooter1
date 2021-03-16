@@ -29,7 +29,7 @@ def draw_buildings(buildings):
 def check_collision(buildings):
     for building in buildings:
         if ship_rect.colliderect(building):
-            print("Object collision")
+            print("Building collision")
             return False
 
     if ship_rect.top <= -100 or ship_rect.bottom >= 720:
@@ -75,7 +75,7 @@ pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=256)
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
-game_font = pygame.font.Font('distant galaxy 2.ttf', 24)
+game_font = pygame.font.Font('assets/distant galaxy 2.ttf', 24)
 
 # Game Variables
 
@@ -86,36 +86,39 @@ score = 0
 high_score = 0
 
 pygame.display.set_caption("ArcShooter")
-icon = pygame.image.load('icon0.png')
+icon = pygame.image.load('assets/icon0.png')
 pygame.display.set_icon(icon)
 counter = 0
 
-bg_surface1 = pygame.image.load('shooterbkg2.png').convert()
-bg_surface2 = pygame.image.load('shooterbkg3.png').convert()
-floor_surface = pygame.image.load('movingbkg.png').convert_alpha()
-cloud1_surface = pygame.image.load('cloud.png').convert_alpha()
-cloud2_surface = pygame.image.load('cloud1.png').convert_alpha()
+bg_surface1 = pygame.image.load('assets/shooterbkg2.png').convert()
+bg_surface2 = pygame.image.load('assets/shooterbkg3.png').convert()
+bg_surface3 = pygame.image.load('assets/shooterbkg4.png').convert()
+bg_surface4 = pygame.image.load('assets/shooterbkg5.png').convert()
+floor_surface = pygame.image.load('assets/movingbkg.png').convert_alpha()
+cloud1_surface = pygame.image.load('assets/cloud.png').convert_alpha()
+cloud2_surface = pygame.image.load('assets/cloud1.png').convert_alpha()
 floor_x_pos = 0
 cloud1_x_pos = 1280
 cloud2_x_pos = 2000
 
-ship_downvec = pygame.image.load('ship1.png').convert_alpha()
+ship_downvec = pygame.image.load('assets/ship1.png').convert_alpha()
 ship_downvec = pygame.transform.scale(ship_downvec, (80, 20))
-ship_midvec = pygame.image.load('ship2.png').convert_alpha()
+ship_midvec = pygame.image.load('assets/ship2.png').convert_alpha()
 ship_midvec = pygame.transform.scale(ship_midvec, (80, 20))
-ship_upvec = pygame.image.load('ship3.png').convert_alpha()
+ship_upvec = pygame.image.load('assets/ship3.png').convert_alpha()
 ship_upvec = pygame.transform.scale(ship_upvec, (80, 20))
 ship_frames = [ship_downvec, ship_midvec, ship_upvec]
 ship_index = 2
-ship_divert = False
 ship_surface = ship_frames[ship_index]
-ship_rect = ship_surface.get_rect(center=(200, 420))
+shipX = 200
+shipY = 420
+ship_rect = ship_surface.get_rect(center=(shipX, shipY))
 SHIPVEC = pygame.USEREVENT + 1
 pygame.time.set_timer(SHIPVEC, 100)
 
-building1 = pygame.image.load('build1.png').convert_alpha()
-building2 = pygame.image.load('build2.png').convert_alpha()
-building3 = pygame.image.load('build3.png').convert_alpha()
+building1 = pygame.image.load('assets/build1.png').convert_alpha()
+building2 = pygame.image.load('assets/build2.png').convert_alpha()
+building3 = pygame.image.load('assets/build3.png').convert_alpha()
 building_types = [building1, building2, building3]
 building_index = random.randint(0, 2)
 building_surface = building_types[building_index]
@@ -124,7 +127,19 @@ SPAWNBUILDING = pygame.USEREVENT
 pygame.time.set_timer(SPAWNBUILDING, 800)
 building_height = [500, 350, 300, 330, 470, 450]
 
-game_over_surface = pygame.image.load('gameover.png').convert_alpha()
+bogey1_downvec = pygame.image.load('assets/bogey1a.png').convert_alpha()
+bogey1_midvec = pygame.image.load('assets/bogey1b.png').convert_alpha()
+bogey1_upvec = pygame.image.load('assets/bogey1c.png').convert_alpha()
+bogey1_frames = [bogey1_downvec, bogey1_midvec, bogey1_upvec]
+bogey1_index = 0
+bogey1_surface = bogey1_frames[bogey1_index]
+bogey1X = 1400
+bogey1Y = random.randint(70, 220)
+bogey1_rect = bogey1_surface.get_rect(center=(bogey1X, bogey1Y))
+BOGEY1VEC = pygame.USEREVENT + 1
+pygame.time.set_timer(BOGEY1VEC, 100)
+
+game_over_surface = pygame.image.load('assets/gameover.png').convert_alpha()
 game_over_rect = game_over_surface.get_rect(center=(640, 360))
 
 while True:
@@ -136,14 +151,16 @@ while True:
         if keys[pygame.K_SPACE]:
             ship_movement = 0
             ship_movement -= 2
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_x]:
             ship_movement = -gravity
         if keys[pygame.K_SPACE] and game_active is False:
             game_active = True
             building_list.clear()
-            ship_rect.center = (200, 420)
+            ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
+            bogey1X = 1400
+            bogey1Y = random.randint(70, 220)
 
         if event.type == SPAWNBUILDING:
             building_list.append(create_building())
@@ -157,12 +174,20 @@ while True:
             ship_surface, ship_rect = ship_animation()
 
     # Background
+
     if counter == 0:
         screen.blit(bg_surface1, (0, 0))
         counter = 1
     elif counter == 1:
         screen.blit(bg_surface2, (0, 0))
+        counter = 2
+    elif counter == 2:
+        screen.blit(bg_surface3, (0, 0))
+        counter = 3
+    elif counter == 3:
+        screen.blit(bg_surface4, (0, 0))
         counter = 0
+
     # Floor
 
     floor_x_pos -= 1
@@ -189,6 +214,23 @@ while True:
 
         score += 1
         score_display('main_game')
+
+        # Contacts
+
+        bogey1X -= 5
+        bogey1_surface = bogey1_frames[bogey1_index]
+        bogey1_index += 1
+        screen.blit(bogey1_surface, (bogey1X, bogey1Y))
+        if bogey1X <= -400:
+            bogey1X = 1400
+            bogey1Y = random.randint(70, 220)
+        if bogey1_index > 2:
+            bogey1_index = 0
+        bogey1_rect = bogey1_surface.get_rect(center=(bogey1X, bogey1Y))
+        if ship_rect.colliderect(bogey1_rect):
+            game_active = False
+            print("Bogey collision")
+
     else:
         screen.blit(game_over_surface, game_over_rect)
         high_score = update_score(score, high_score)
