@@ -4,30 +4,59 @@ import random
 
 
 def draw_floor():
-    screen.blit(floor_surface, (floor_x_pos, 525))
-    screen.blit(floor_surface, (floor_x_pos + 1280, 525))
+    screen.blit(floor_surface, (floor_x_pos, 130))
+    screen.blit(floor_surface, (floor_x_pos + 1280, 130))
 
 
-def create_building():
-    random_building_pos = random.choice(building_height)
-    bottom_building = building_surface.get_rect(midtop=(1500, random_building_pos))
-    top_building = 0
+def create_building1():
+    random_building_pos = random.choice(building1_height)
+    bottom_building = building1_surface.get_rect(midtop=(1500, random_building_pos))
     return bottom_building
+
+
+def draw_buildings1(buildings):
+    for building in buildings:
+        screen.blit(building1_surface, building)
+
+
+def create_building2():
+    random_building_pos = random.choice(building2_height)
+    bottom_building = building2_surface.get_rect(midtop=(1500, random_building_pos))
+    return bottom_building
+
+
+def draw_buildings2(buildings):
+    for building in buildings:
+        screen.blit(building2_surface, building)
+
+
+def create_building3():
+    random_building_pos = random.choice(building3_height)
+    bottom_building = building3_surface.get_rect(midtop=(1500, random_building_pos))
+    return bottom_building
+
+
+def draw_buildings3(buildings):
+    for building in buildings:
+        screen.blit(building3_surface, building)
 
 
 def move_buildings(buildings):
     for building in buildings:
-        building.centerx -= 5
+        building.centerx -= 3
     return buildings
 
 
-def draw_buildings(buildings):
-    for building in buildings:
-        screen.blit(building_surface, building)
-
-
-def check_collision(buildings):
-    for building in buildings:
+def check_collision(buildings1, buildings2, buildings3):
+    for building in buildings1:
+        if ship_rect.colliderect(building):
+            print("Building collision")
+            return False
+    for building in buildings2:
+        if ship_rect.colliderect(building):
+            print("Building collision")
+            return False
+    for building in buildings3:
         if ship_rect.colliderect(building):
             print("Building collision")
             return False
@@ -117,15 +146,25 @@ SHIPVEC = pygame.USEREVENT + 1
 pygame.time.set_timer(SHIPVEC, 100)
 
 building1 = pygame.image.load('assets/build1.png').convert_alpha()
+building1_surface = building1
+building1_list = []
+SPAWNBUILDING1 = pygame.USEREVENT
+pygame.time.set_timer(SPAWNBUILDING1, 750)
+building1_height = [300, 400, 500, 600, 700, 800]
+
 building2 = pygame.image.load('assets/build2.png').convert_alpha()
+building2_surface = building2
+building2_list = []
+SPAWNBUILDING2 = pygame.USEREVENT
+pygame.time.set_timer(SPAWNBUILDING2, 1500)
+building2_height = [320, 420, 520, 620, 720, 820]
+
 building3 = pygame.image.load('assets/build3.png').convert_alpha()
-building_types = [building1, building2, building3]
-building_index = random.randint(0, 2)
-building_surface = building_types[building_index]
-building_list = []
-SPAWNBUILDING = pygame.USEREVENT
-pygame.time.set_timer(SPAWNBUILDING, 800)
-building_height = [500, 350, 300, 330, 470, 450]
+building3_surface = building3
+building3_list = []
+SPAWNBUILDING3 = pygame.USEREVENT
+pygame.time.set_timer(SPAWNBUILDING3, 2250)
+building3_height = [350, 450, 550, 650, 750, 850]
 
 bogey1_downvec = pygame.image.load('assets/bogey1a.png').convert_alpha()
 bogey1_midvec = pygame.image.load('assets/bogey1b.png').convert_alpha()
@@ -155,15 +194,21 @@ while True:
             ship_movement = -gravity
         if keys[pygame.K_SPACE] and game_active is False:
             game_active = True
-            building_list.clear()
+            building1_list.clear()
+            building2_list.clear()
+            building3_list.clear()
             ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
             bogey1X = 1400
             bogey1Y = random.randint(70, 220)
 
-        if event.type == SPAWNBUILDING:
-            building_list.append(create_building())
+        if event.type == SPAWNBUILDING1:
+            building1_list.append(create_building1())
+        if event.type == SPAWNBUILDING2:
+            building2_list.append(create_building2())
+        if event.type == SPAWNBUILDING3:
+            building3_list.append(create_building3())
 
         if event.type == SHIPVEC:
             if ship_index < 2:
@@ -205,19 +250,23 @@ while True:
         print('ship_movement: ', ship_movement)
         ship_rect.centery += ship_movement
         screen.blit(rotated_ship, ship_rect)
-        game_active = check_collision(building_list)
+        game_active = check_collision(building1_list, building2_list, building3_list)
 
         # Buildings
 
-        building_list = move_buildings(building_list)
-        draw_buildings(building_list)
+        building1_list = move_buildings(building1_list)
+        draw_buildings1(building1_list)
+        building2_list = move_buildings(building2_list)
+        draw_buildings2(building2_list)
+        building3_list = move_buildings(building3_list)
+        draw_buildings3(building3_list)
 
         score += 1
         score_display('main_game')
 
         # Contacts
 
-        bogey1X -= 5
+        bogey1X -= 2
         bogey1_surface = bogey1_frames[bogey1_index]
         bogey1_index += 1
         screen.blit(bogey1_surface, (bogey1X, bogey1Y))
