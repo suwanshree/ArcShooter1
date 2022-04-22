@@ -98,7 +98,7 @@ def score_display(game_state):
         high_score_rect = high_score_surface.get_rect(center=(640, 420))
         screen.blit(high_score_surface, high_score_rect)
 
-        new_game_surface = game_font.render(f'Restart: Space - Quit: Q', True, (180, 150, 150))
+        new_game_surface = game_font.render(f'Restart: R - Quit: Close Window', True, (180, 150, 150))
         new_game_rect = new_game_surface.get_rect(center=(640, 700))
         screen.blit(new_game_surface, new_game_rect)
 
@@ -201,7 +201,7 @@ while True:
             ship_movement -= 2
         if keys[pygame.K_x]:
             ship_movement = -gravity
-        if keys[pygame.K_SPACE] and game_active is False:
+        if keys[pygame.K_r] and game_active is False:
             game_active = True
             building1_list.clear()
             building2_list.clear()
@@ -211,8 +211,6 @@ while True:
             score = 0
             bogey1X = 1400
             bogey1Y = random.randint(70, 220)
-        if keys[pygame.K_q] and game_active is False:
-            event.type = pygame.QUIT
 
         if event.type == SPAWNBUILDING1:
             building1_list.append(create_building1())
