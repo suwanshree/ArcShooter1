@@ -7,7 +7,13 @@ Launch executable is coming soon! For now, to test the game in its current state
 
 1. Clone the repository from [ArcShooter1 repository](https://github.com/suwanshree/ArcShooter1.git).
 2. Install python3 either globally or locally using pipenv.
-3. Install the pygame library.
-4. Launch the application's *main1.py* file using python3.
+3. Install the pygame library:
+    ```
+    pip install pygame
+    ```
+4. Launch the application's *main1.py* file using python3:
+    ```
+    python3 main1.py
+    ```
 
 Updates coming soon! Feedback is much appreciated!
