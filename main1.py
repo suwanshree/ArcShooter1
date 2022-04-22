@@ -84,7 +84,12 @@ def score_display(game_state):
         score_surface = game_font.render(f'Distance: {str(score)} kms', True, (118, 118, 118))
         score_rect = score_surface.get_rect(center=(120, 705))
         screen.blit(score_surface, score_rect)
-    if game_state == 'game_over':
+
+        control_surface = game_font.render(f'Boost: Space - Hover: X (Hold)', True, (120, 120, 120))
+        control_rect = control_surface.get_rect(center=(1070, 705))
+        screen.blit(control_surface, control_rect)
+
+    if game_state == 'game_over': 
         score_surface = game_font.render(f'Distance: {str(score)} kms', True, (180, 150, 150))
         score_rect = score_surface.get_rect(center=(640, 300))
         screen.blit(score_surface, score_rect)
@@ -92,6 +97,10 @@ def score_display(game_state):
         high_score_surface = game_font.render(f'Highest Distance: {str(high_score)} kms', True, (180, 150, 150))
         high_score_rect = high_score_surface.get_rect(center=(640, 420))
         screen.blit(high_score_surface, high_score_rect)
+
+        new_game_surface = game_font.render(f'Restart: Space - Quit: Q', True, (180, 150, 150))
+        new_game_rect = new_game_surface.get_rect(center=(640, 700))
+        screen.blit(new_game_surface, new_game_rect)
 
 
 def update_score(score, high_score):
@@ -202,6 +211,8 @@ while True:
             score = 0
             bogey1X = 1400
             bogey1Y = random.randint(70, 220)
+        if keys[pygame.K_q] and game_active is False:
+            event.type = pygame.QUIT
 
         if event.type == SPAWNBUILDING1:
             building1_list.append(create_building1())
