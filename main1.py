@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-
+import pickle
 
 def draw_floor():
     screen.blit(floor_surface, (floor_x_pos, 130))
@@ -115,6 +115,8 @@ def score_display(game_state):
 def update_score(score, high_score):
     if score > high_score:
         high_score = score
+        with open('score.dat', 'wb') as file:
+            pickle.dump(high_score, file)
     return high_score
 
 
@@ -131,7 +133,12 @@ ship_movement = 0
 game_active = False
 game_start = True
 score = 0
-high_score = 0
+try:
+    with open('score.dat', 'rb') as file:
+        high_score = pickle.load(file)
+except:
+    high_score = 0
+
 
 pygame.display.set_caption("ArcShooter")
 icon = pygame.image.load('assets/icon0.png')
