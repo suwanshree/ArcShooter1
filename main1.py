@@ -89,7 +89,7 @@ def score_display(game_state):
         control_rect = control_surface.get_rect(center=(1070, 705))
         screen.blit(control_surface, control_rect)
 
-    if game_state == 'game_over': 
+    if game_state == 'game_over':
         score_surface = game_font.render(f'Distance: {str(score)} kms', True, (180, 150, 150))
         score_rect = score_surface.get_rect(center=(640, 300))
         screen.blit(score_surface, score_rect)
@@ -98,7 +98,16 @@ def score_display(game_state):
         high_score_rect = high_score_surface.get_rect(center=(640, 420))
         screen.blit(high_score_surface, high_score_rect)
 
-        new_game_surface = game_font.render(f'Restart: R - Quit: Close Window', True, (180, 150, 150))
+        new_game_surface = game_font.render(f'Restart: Enter - Quit: Close Window', True, (180, 150, 150))
+        new_game_rect = new_game_surface.get_rect(center=(640, 700))
+        screen.blit(new_game_surface, new_game_rect)
+
+    if game_state == 'game_start':
+        high_score_surface = game_font.render(f'Highest Distance: {str(high_score)} kms', True, (180, 150, 150))
+        high_score_rect = high_score_surface.get_rect(center=(640, 420))
+        screen.blit(high_score_surface, high_score_rect)
+
+        new_game_surface = game_font.render(f'Start: Enter - Quit: Close Window', True, (180, 150, 150))
         new_game_rect = new_game_surface.get_rect(center=(640, 700))
         screen.blit(new_game_surface, new_game_rect)
 
@@ -119,7 +128,8 @@ game_font = pygame.font.Font('assets/distant galaxy 2.ttf', 24)
 
 gravity = 0.04
 ship_movement = 0
-game_active = True
+game_active = False
+game_start = True
 score = 0
 high_score = 0
 
@@ -190,6 +200,9 @@ pygame.time.set_timer(BOGEY1VEC, 100)
 game_over_surface = pygame.image.load('assets/gameover.png').convert_alpha()
 game_over_rect = game_over_surface.get_rect(center=(640, 360))
 
+game_start_surface = pygame.image.load('assets/gamestart.png').convert_alpha()
+game_start_rect = game_start_surface.get_rect(center=(640, 360))
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -201,8 +214,9 @@ while True:
             ship_movement -= 2
         if keys[pygame.K_x]:
             ship_movement = -gravity
-        if keys[pygame.K_r] and game_active is False:
+        if keys[pygame.K_RETURN] and game_active is False:
             game_active = True
+            game_start = False
             building1_list.clear()
             building2_list.clear()
             building3_list.clear()
@@ -288,6 +302,11 @@ while True:
         if ship_rect.colliderect(bogey1_rect):
             game_active = False
             print("Bogey collision")
+
+    elif game_start:
+        screen.blit(game_start_surface, game_start_rect)
+        high_score = update_score(score, high_score)
+        score_display('game_start')
 
     else:
         screen.blit(game_over_surface, game_over_rect)
