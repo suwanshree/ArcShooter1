@@ -13,6 +13,7 @@ Launch executable is coming soon! For now, to test the game in its current state
     pip install pygame
     ```
 4. Launch the application's *main1.py* file using python:
+
     Windows:
     ```
     python main1.py
