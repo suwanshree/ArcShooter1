@@ -10,7 +10,7 @@ def draw_floor():
 
 def create_building1():
     random_building_pos = random.choice(building1_height)
-    bottom_building = building1_surface.get_rect(midtop=(1500, random_building_pos))
+    bottom_building = building1_surface.get_rect(midtop=(2000, random_building_pos))
     return bottom_building
 
 
@@ -32,7 +32,7 @@ def draw_buildings2(buildings):
 
 def create_building3():
     random_building_pos = random.choice(building3_height)
-    bottom_building = building3_surface.get_rect(midtop=(1500, random_building_pos))
+    bottom_building = building3_surface.get_rect(midtop=(1700, random_building_pos))
     return bottom_building
 
 
@@ -176,21 +176,21 @@ building1_surface = building1
 building1_list = []
 SPAWNBUILDING1 = pygame.USEREVENT
 pygame.time.set_timer(SPAWNBUILDING1, 750)
-building1_height = [300, 400, 500, 600, 700, 800]
+building1_height = [220, 250, 350, 450, 500, 550]
 
 building2 = pygame.image.load('assets/build2.png').convert_alpha()
 building2_surface = building2
 building2_list = []
 SPAWNBUILDING2 = pygame.USEREVENT
 pygame.time.set_timer(SPAWNBUILDING2, 1500)
-building2_height = [320, 420, 520, 620, 720, 820]
+building2_height = [200, 228, 364, 439, 565, 592]
 
 building3 = pygame.image.load('assets/build3.png').convert_alpha()
 building3_surface = building3
 building3_list = []
 SPAWNBUILDING3 = pygame.USEREVENT
 pygame.time.set_timer(SPAWNBUILDING3, 2250)
-building3_height = [350, 450, 550, 650, 750, 850]
+building3_height = [190, 290, 378, 419, 449, 497]
 
 bogey1_downvec = pygame.image.load('assets/bogey1a.png').convert_alpha()
 bogey1_midvec = pygame.image.load('assets/bogey1b.png').convert_alpha()
@@ -199,7 +199,7 @@ bogey1_frames = [bogey1_downvec, bogey1_midvec, bogey1_upvec]
 bogey1_index = 0
 bogey1_surface = bogey1_frames[bogey1_index]
 bogey1X = 1400
-bogey1Y = random.randint(70, 220)
+bogey1Y = random.randint(60, 220)
 bogey1_rect = bogey1_surface.get_rect(center=(bogey1X, bogey1Y))
 BOGEY1VEC = pygame.USEREVENT + 1
 pygame.time.set_timer(BOGEY1VEC, 100)
@@ -230,7 +230,7 @@ while True:
             ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
-            bogey1X = 1400
+            bogey1X = 2000
             bogey1Y = random.randint(70, 220)
 
         if event.type == SPAWNBUILDING1:
