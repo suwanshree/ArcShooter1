@@ -46,6 +46,11 @@ def move_buildings(buildings):
         building.centerx -= 3
     return buildings
 
+def stop_buildings(buildings):
+    for building in buildings:
+        building.centerx += 3
+    return buildings
+
 
 def check_collision(buildings1, buildings2, buildings3):
     for building in buildings1:
@@ -132,6 +137,7 @@ gravity = 0.04
 ship_movement = 0
 game_active = False
 game_start = True
+game_paused = False
 score = 0
 try:
     with open('score.dat', 'rb') as file:
@@ -232,6 +238,11 @@ while True:
             score = 0
             bogey1X = 2000
             bogey1Y = random.randint(70, 220)
+        if keys[pygame.K_p]:
+            game_paused = True
+        if keys[pygame.K_p] and game_paused is True:
+            game_paused = False
+
 
         if event.type == SPAWNBUILDING1:
             building1_list.append(create_building1())
@@ -310,6 +321,7 @@ while True:
             game_active = False
             print("Bogey collision")
 
+
     elif game_start:
         screen.blit(game_start_surface, game_start_rect)
         high_score = update_score(score, high_score)
@@ -319,6 +331,14 @@ while True:
         screen.blit(game_over_surface, game_over_rect)
         high_score = update_score(score, high_score)
         score_display('game_over')
+
+    # Pause
+    if game_paused:
+        screen.blit(game_over_surface, game_over_rect)
+        building1_list = stop_buildings(building1_list)
+        building2_list = stop_buildings(building2_list)
+        building3_list = stop_buildings(building3_list)
+        bogey1X += 2
 
     # Clouds
 
