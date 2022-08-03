@@ -55,19 +55,15 @@ def stop_buildings(buildings):
 def check_collision(buildings1, buildings2, buildings3):
     for building in buildings1:
         if ship_rect.colliderect(building):
-            print("Building collision")
             return False
     for building in buildings2:
         if ship_rect.colliderect(building):
-            print("Building collision")
             return False
     for building in buildings3:
         if ship_rect.colliderect(building):
-            print("Building collision")
             return False
 
     if ship_rect.top <= -100 or ship_rect.bottom >= 720:
-        print("Out of bounds")
         return False
 
     return True
@@ -101,11 +97,15 @@ def score_display(game_state):
 
     if game_state == 'game_over':
         score_surface = game_font.render(f'Distance: {str(score)} kms', True, (180, 150, 150))
-        score_rect = score_surface.get_rect(center=(640, 300))
+        score_rect = score_surface.get_rect(center=(640, 200))
         screen.blit(score_surface, score_rect)
 
+        reason_surface = game_font.render(f'{over_message}', True, (180, 150, 150))
+        reason_rect = reason_surface.get_rect(center=(640, 420))
+        screen.blit(reason_surface, reason_rect)
+
         high_score_surface = game_font.render(f'Highest Distance: {str(high_score)} kms', True, (180, 150, 150))
-        high_score_rect = high_score_surface.get_rect(center=(640, 420))
+        high_score_rect = high_score_surface.get_rect(center=(640, 560))
         screen.blit(high_score_surface, high_score_rect)
 
         new_game_surface = game_font.render(f'Restart: Enter - Quit: Esc', True, (180, 150, 150))
@@ -145,6 +145,9 @@ game_active = False
 game_start = True
 game_paused = False
 boost = 392
+over_message = 'Your ship hit a building or went out of bounds!'
+bogey_collision = 'Your ship collided with another ship!'
+
 grey = pygame.color.Color('#808080')
 black = pygame.color.Color('#000000')
 score = 0
@@ -326,8 +329,6 @@ while True:
 
         ship_movement += gravity
         rotated_ship = rotate_ship(ship_surface)
-        print('ship_rect_centery: ', ship_rect.centery)
-        print('ship_movement: ', ship_movement)
         ship_rect.centery += ship_movement
         screen.blit(rotated_ship, ship_rect)
         game_active = check_collision(building1_list, building2_list, building3_list)
@@ -357,8 +358,8 @@ while True:
             bogey1_index = 0
         bogey1_rect = bogey1_surface.get_rect(center=(bogey1X, bogey1Y))
         if ship_rect.colliderect(bogey1_rect):
+            over_message = bogey_collision
             game_active = False
-            print("Bogey collision")
 
 
     elif game_start:
