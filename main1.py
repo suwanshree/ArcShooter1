@@ -94,6 +94,11 @@ def score_display(game_state):
         control_rect = control_surface.get_rect(center=(1070, 705))
         screen.blit(control_surface, control_rect)
 
+        pygame.draw.rect(screen, black, [350, 682, 402, 34])
+        pygame.draw.rect(screen, grey, [351, 683, 400, 32])
+        pygame.draw.rect(screen, black, [355, 687, boost, 24])
+
+
     if game_state == 'game_over':
         score_surface = game_font.render(f'Distance: {str(score)} kms', True, (180, 150, 150))
         score_rect = score_surface.get_rect(center=(640, 300))
@@ -138,6 +143,9 @@ ship_movement = 0
 game_active = False
 game_start = True
 game_paused = False
+boost = 392
+grey = pygame.color.Color('#808080')
+black = pygame.color.Color('#000000')
 score = 0
 try:
     with open('score.dat', 'rb') as file:
@@ -217,6 +225,12 @@ game_start_surface = pygame.image.load('assets/gamestart.png').convert_alpha()
 game_start_rect = game_start_surface.get_rect(center=(640, 360))
 
 while True:
+
+    if boost > 392:
+        boost = 392
+    elif boost < 0:
+        boost = 0
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -225,8 +239,10 @@ while True:
         if keys[pygame.K_SPACE]:
             ship_movement = 0
             ship_movement -= 2
+            boost -= 5
         if keys[pygame.K_x]:
             ship_movement = -gravity
+            boost -= 5
         if keys[pygame.K_RETURN] and game_active is False:
             game_active = True
             game_start = False
@@ -236,12 +252,14 @@ while True:
             ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
+            boost = 392
             bogey1X = 2000
             bogey1Y = random.randint(70, 220)
         if keys[pygame.K_p]:
             game_paused = True
         if keys[pygame.K_p] and game_paused is True:
             game_paused = False
+        boost += 1
 
 
         if event.type == SPAWNBUILDING1:
@@ -352,4 +370,4 @@ while True:
         cloud2_x_pos = 2000
 
     pygame.display.update()
-    clock.tick(120)
+    clock.tick(60)
