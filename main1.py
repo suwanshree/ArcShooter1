@@ -90,13 +90,13 @@ def score_display(game_state):
         score_rect = score_surface.get_rect(center=(120, 705))
         screen.blit(score_surface, score_rect)
 
-        control_surface = game_font.render(f'Boost: Space - Hover: X (Hold)', True, (120, 120, 120))
-        control_rect = control_surface.get_rect(center=(1070, 705))
+        control_surface = game_font.render(f'Boost: Space - Hover: X (Hold) - Restart: R', True, (120, 120, 120))
+        control_rect = control_surface.get_rect(center=(970, 705))
         screen.blit(control_surface, control_rect)
 
-        pygame.draw.rect(screen, black, [350, 682, 402, 34])
-        pygame.draw.rect(screen, grey, [351, 683, 400, 32])
-        pygame.draw.rect(screen, black, [355, 687, boost, 24])
+        pygame.draw.rect(screen, black, [250, 682, 402, 34])
+        pygame.draw.rect(screen, grey, [251, 683, 400, 32])
+        pygame.draw.rect(screen, black, [255, 687, boost, 24])
 
 
     if game_state == 'game_over':
@@ -108,7 +108,7 @@ def score_display(game_state):
         high_score_rect = high_score_surface.get_rect(center=(640, 420))
         screen.blit(high_score_surface, high_score_rect)
 
-        new_game_surface = game_font.render(f'Restart: Enter - Quit: Close Window', True, (180, 150, 150))
+        new_game_surface = game_font.render(f'Restart: Enter - Quit: Esc', True, (180, 150, 150))
         new_game_rect = new_game_surface.get_rect(center=(640, 700))
         screen.blit(new_game_surface, new_game_rect)
 
@@ -117,7 +117,7 @@ def score_display(game_state):
         high_score_rect = high_score_surface.get_rect(center=(640, 420))
         screen.blit(high_score_surface, high_score_rect)
 
-        new_game_surface = game_font.render(f'Start: Enter - Quit: Close Window', True, (180, 150, 150))
+        new_game_surface = game_font.render(f'Start: Enter - Quit: Esc', True, (180, 150, 150))
         new_game_rect = new_game_surface.get_rect(center=(640, 700))
         screen.blit(new_game_surface, new_game_rect)
 
@@ -140,6 +140,7 @@ game_font = pygame.font.Font('assets/distant galaxy 2.ttf', 24)
 
 gravity = 0.04
 ship_movement = 0
+movement = True
 game_active = False
 game_start = True
 game_paused = False
@@ -230,6 +231,10 @@ while True:
         boost = 392
     elif boost < 0:
         boost = 0
+    if boost < 100:
+        movement = False
+    else:
+        movement = True
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -255,11 +260,27 @@ while True:
             boost = 392
             bogey1X = 2000
             bogey1Y = random.randint(70, 220)
+        if keys[pygame.K_r] and game_active is True:
+            game_active = True
+            game_start = False
+            building1_list.clear()
+            building2_list.clear()
+            building3_list.clear()
+            ship_rect.center = (shipX, shipY)
+            ship_movement = 0
+            score = 0
+            boost = 392
+            bogey1X = 2000
+            bogey1Y = random.randint(70, 220)
         if keys[pygame.K_p]:
             game_paused = True
         if keys[pygame.K_p] and game_paused is True:
             game_paused = False
+        if keys[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
         boost += 1
+
 
 
         if event.type == SPAWNBUILDING1:
