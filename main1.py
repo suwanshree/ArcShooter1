@@ -51,23 +51,24 @@ def stop_buildings(buildings):
         building.centerx += 3
     return buildings
 
-
-def check_collision(buildings1, buildings2, buildings3):
+def check_collision(buildings1, buildings2, buildings3, bogey1_rect):
     for building in buildings1:
         if ship_rect.colliderect(building):
-            return False
+            return 'Your ship collided with a building!'
     for building in buildings2:
         if ship_rect.colliderect(building):
-            return False
+            return 'Your ship collided with a building!'
     for building in buildings3:
         if ship_rect.colliderect(building):
-            return False
+            return 'Your ship collided with a building!'
+
+    if ship_rect.colliderect(bogey1_rect):
+        return 'Your ship collided with another ship!'
 
     if ship_rect.top <= -100 or ship_rect.bottom >= 720:
-        return False
+        return 'Your ship went out of bounds!'
 
-    return True
-
+    return 'Game Running'
 
 def rotate_ship(ship):
     new_ship = pygame.transform.rotozoom(ship, -ship_movement * 3, 1)
@@ -145,8 +146,7 @@ game_active = False
 game_start = True
 game_paused = False
 boost = 392
-over_message = 'Your ship hit a building or went out of bounds!'
-bogey_collision = 'Your ship collided with another ship!'
+over_message = 'Game Running'
 
 grey = pygame.color.Color('#808080')
 black = pygame.color.Color('#000000')
@@ -257,6 +257,7 @@ while True:
             building1_list.clear()
             building2_list.clear()
             building3_list.clear()
+            over_message = 'Game Running'
             ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
@@ -269,6 +270,7 @@ while True:
             building1_list.clear()
             building2_list.clear()
             building3_list.clear()
+            over_message = 'Game Running'
             ship_rect.center = (shipX, shipY)
             ship_movement = 0
             score = 0
@@ -282,7 +284,7 @@ while True:
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-        boost += 1
+        boost += 2
 
 
 
@@ -327,11 +329,15 @@ while True:
 
         # Ship
 
+        checker = True
         ship_movement += gravity
         rotated_ship = rotate_ship(ship_surface)
         ship_rect.centery += ship_movement
         screen.blit(rotated_ship, ship_rect)
-        game_active = check_collision(building1_list, building2_list, building3_list)
+        over_message = check_collision(building1_list, building2_list, building3_list, bogey1_rect)
+        if over_message != 'Game Running':
+            checker = False
+        game_active = checker
 
         # Buildings
 
@@ -356,10 +362,7 @@ while True:
             bogey1Y = random.randint(70, 220)
         if bogey1_index > 2:
             bogey1_index = 0
-        bogey1_rect = bogey1_surface.get_rect(center=(bogey1X, bogey1Y))
-        if ship_rect.colliderect(bogey1_rect):
-            over_message = bogey_collision
-            game_active = False
+        bogey1_rect = bogey1_surface.get_rect(center=(bogey1X + 80, bogey1Y))
 
 
     elif game_start:
