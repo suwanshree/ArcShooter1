@@ -247,10 +247,10 @@ while True:
         if keys[pygame.K_SPACE]:
             ship_movement = 0
             ship_movement -= 2
-            boost -= 5
+            boost -= 3
         if keys[pygame.K_x]:
             ship_movement = -gravity
-            boost -= 5
+            boost -= 6
         if keys[pygame.K_RETURN] and game_active is False:
             game_active = True
             game_start = False
