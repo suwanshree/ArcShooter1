@@ -26,7 +26,7 @@
     <li><a href="#key-features">Key Features</a></li>
     <li><a href="#project-overview">Project Overview</a></li>
     <li><a href="#arcshooter1-setup">Arcshooter1 Setup</a></li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#controls">Controls</a></li>
     <li><a href="#future-implementations">Future Implementations</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -86,7 +86,7 @@ Technologies/Frameworks Used
    ```
 
 
-<!-- USAGE EXAMPLES -->
+<!-- CONTROLS -->
 
 ## Controls
 
