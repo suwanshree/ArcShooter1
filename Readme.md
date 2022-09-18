@@ -38,7 +38,7 @@
 
 ArcShooter1 lets players control a spaceship. The main objective of the game is to survive by not colliding with obstacles for as long as possible. More features such as the ability to shoot down enemy ships and enemy ships firing back at the player are currently a work in progress. Further game loops are also planned for future implementations. Launch executable is coming soon too! For now, to test the game in its current state please follow the steps in the setup section. Updates coming soon! Feedback is much appreciated!
 
-<img src="assets/arc.gif" width=auto height=auto>
+<img src="assets/arc2.gif" width=auto height=auto>
 
 ## Key Features
 
