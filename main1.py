@@ -234,7 +234,7 @@ while True:
         boost = 392
     elif boost < 0:
         boost = 0
-    if boost < 100:
+    if boost < 1:
         movement = False
     else:
         movement = True
@@ -244,11 +244,11 @@ while True:
             pygame.quit()
             sys.exit()
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
+        if  movement and keys[pygame.K_SPACE]:
             ship_movement = 0
             ship_movement -= 2
             boost -= 3
-        if keys[pygame.K_x]:
+        if movement and keys[pygame.K_x]:
             ship_movement = -gravity
             boost -= 6
         if keys[pygame.K_RETURN] and game_active is False:
@@ -284,7 +284,10 @@ while True:
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-        boost += 2
+
+        if not any(keys):
+            boost += 2
+
 
 
 
