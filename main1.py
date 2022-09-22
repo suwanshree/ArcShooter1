@@ -263,6 +263,8 @@ while True:
 
     for event in pygame.event.get():
 
+        # Keyboard inputs
+
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -318,6 +320,8 @@ while True:
 
         if not any(keys):
             boost += 2
+
+        # Event types
 
         if event.type == SPAWNBUILDING1:
             building1_list.append(create_building1())
