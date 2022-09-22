@@ -1,7 +1,11 @@
+# Imports
+
 import pygame
 import sys
 import random
 import pickle
+
+# Floor and Buildings
 
 def draw_floor():
     screen.blit(floor_surface, (floor_x_pos, 130))
@@ -51,6 +55,8 @@ def stop_buildings(buildings):
         building.centerx += 3
     return buildings
 
+# Collision checker
+
 def check_collision(buildings1, buildings2, buildings3, bogey1_rect):
     for building in buildings1:
         if ship_rect.colliderect(building):
@@ -70,16 +76,18 @@ def check_collision(buildings1, buildings2, buildings3, bogey1_rect):
 
     return 'Game Running'
 
+# Ship Animations
+
 def rotate_ship(ship):
     new_ship = pygame.transform.rotozoom(ship, -ship_movement * 3, 1)
     return new_ship
-
 
 def ship_animation():
     new_ship = ship_frames[ship_index]
     new_ship_rect = new_ship.get_rect(center=(200, ship_rect.centery))
     return new_ship, new_ship_rect
 
+# All screens
 
 def score_display(game_state):
     if game_state == 'main_game':
@@ -122,6 +130,7 @@ def score_display(game_state):
         new_game_rect = new_game_surface.get_rect(center=(640, 700))
         screen.blit(new_game_surface, new_game_rect)
 
+# Score updating and saving function
 
 def update_score(score, high_score):
     if score > high_score:
@@ -130,6 +139,7 @@ def update_score(score, high_score):
             pickle.dump(high_score, file)
     return high_score
 
+# Basics setup
 
 pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=256)
 pygame.init()
@@ -147,10 +157,12 @@ game_start = True
 game_paused = False
 boost = 392
 over_message = 'Game Running'
-
 grey = pygame.color.Color('#808080')
 black = pygame.color.Color('#000000')
 score = 0
+
+# Checking for previous high score
+
 try:
     with open('score.dat', 'rb') as file:
         high_score = pickle.load(file)
@@ -163,13 +175,17 @@ icon = pygame.image.load('assets/icon0.png')
 pygame.display.set_icon(icon)
 counter = 0
 
+# Variables for image assets
+
 bg_surface1 = pygame.image.load('assets/shooterbkg2.png').convert()
 bg_surface2 = pygame.image.load('assets/shooterbkg3.png').convert()
 bg_surface3 = pygame.image.load('assets/shooterbkg4.png').convert()
 bg_surface4 = pygame.image.load('assets/shooterbkg5.png').convert()
+
 floor_surface = pygame.image.load('assets/movingbkg.png').convert_alpha()
 cloud1_surface = pygame.image.load('assets/cloud.png').convert_alpha()
 cloud2_surface = pygame.image.load('assets/cloud1.png').convert_alpha()
+
 floor_x_pos = 0
 cloud1_x_pos = 1280
 cloud2_x_pos = 2000
@@ -228,7 +244,11 @@ game_over_rect = game_over_surface.get_rect(center=(640, 360))
 game_start_surface = pygame.image.load('assets/gamestart.png').convert_alpha()
 game_start_rect = game_start_surface.get_rect(center=(640, 360))
 
+# Main Game Loop
+
 while True:
+
+    # Disabling movement if boost is empty
 
     if boost > 392:
         boost = 392
@@ -239,18 +259,27 @@ while True:
     else:
         movement = True
 
+    # Player Control Inputs
+
     for event in pygame.event.get():
+
+        # Keyboard inputs
+
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         keys = pygame.key.get_pressed()
+
         if  movement and keys[pygame.K_SPACE]:
             ship_movement = 0
             ship_movement -= 2
             boost -= 3
+
         if movement and keys[pygame.K_x]:
             ship_movement = -gravity
             boost -= 6
+
         if keys[pygame.K_RETURN] and game_active is False:
             game_active = True
             game_start = False
@@ -264,6 +293,7 @@ while True:
             boost = 392
             bogey1X = 2000
             bogey1Y = random.randint(70, 220)
+
         if keys[pygame.K_r] and game_active is True:
             game_active = True
             game_start = False
@@ -277,10 +307,13 @@ while True:
             boost = 392
             bogey1X = 2000
             bogey1Y = random.randint(70, 220)
+
         if keys[pygame.K_p]:
             game_paused = True
+
         if keys[pygame.K_p] and game_paused is True:
             game_paused = False
+
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
@@ -288,8 +321,7 @@ while True:
         if not any(keys):
             boost += 2
 
-
-
+        # Event types
 
         if event.type == SPAWNBUILDING1:
             building1_list.append(create_building1())
@@ -306,7 +338,7 @@ while True:
 
             ship_surface, ship_rect = ship_animation()
 
-    # Background
+    # Background Movement
 
     if counter == 0:
         screen.blit(bg_surface1, (0, 0))
@@ -321,7 +353,7 @@ while True:
         screen.blit(bg_surface4, (0, 0))
         counter = 0
 
-    # Floor
+    # Floor Movement
 
     floor_x_pos -= 1
     draw_floor()
@@ -396,6 +428,8 @@ while True:
     screen.blit(cloud2_surface, (cloud2_x_pos, 110))
     if cloud2_x_pos <= -400:
         cloud2_x_pos = 2000
+
+    # Frame Rate
 
     pygame.display.update()
     clock.tick(60)
